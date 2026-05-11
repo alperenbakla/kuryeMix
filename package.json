@@ -1,0 +1,21 @@
+{
+  "name": "kuryemix",
+  "version": "1.0.0",
+  "description": "KuryeMix - Kurye Yönetim ve Teslimat Platformu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["kurye", "teslimat", "yönetim"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "mssql": "^12.3.1"
+  }
+}

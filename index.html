@@ -1,0 +1,534 @@
+  <!DOCTYPE html>
+  <html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KuryeMix - Hızlı Kurye Hizmeti</title>
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+  <body>
+
+    <!-- ========================
+        OVERLAY (Modal arka karartması)
+    ======================== -->
+    <div id="overlay" onclick="tumModallariKapat()"></div>
+    <!-- SEPET MODALI -->
+  <div class="modal genis-modal" id="sepetModal">
+    <div class="modal-icerik">
+      <button class="kapat-btn" onclick="modalKapat('sepetModal')">✕</button>
+      <h2>🛒 Sepetim</h2>
+      <div id="sepetIcerik"></div>
+    </div>
+  </div>
+
+    <!-- ========================
+        TOAST (Bildirim kutusu)
+    ======================== -->
+    <div id="toast"></div>
+
+
+    <!-- ====================================================
+        GİRİŞ MODALI
+    ==================================================== -->
+    <div class="modal" id="girisModal">
+      <div class="modal-icerik">
+        <button class="kapat-btn" onclick="modalKapat('girisModal')">✕</button>
+        <h2>🔑 Giriş Yap</h2>
+
+        <div class="form-grup">
+          <label>E-posta</label>
+          <input type="email" id="girisEmail" placeholder="ornek@mail.com" />
+        </div>
+
+        <div class="form-grup">
+          <label>Şifre</label>
+          <div class="sifre-kutu">
+            <input type="password" id="giriseSifre" placeholder="Şifreniz" />
+            <button class="goz-btn" onclick="sifreyiGoster('giriseSifre', this)">👁</button>
+          </div>
+        </div>
+
+        <button class="modal-btn" onclick="girisYap()">Giriş Yap</button>
+        <p class="alt-link">Hesabın yok mu? <a onclick="modalGecis('girisModal', 'kayitModal')">Kayıt Ol</a></p>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+        KAYIT MODALI
+    ==================================================== -->
+    <div class="modal" id="kayitModal">
+      <div class="modal-icerik">
+        <button class="kapat-btn" onclick="modalKapat('kayitModal')">✕</button>
+        <h2>📝 Kayıt Ol</h2>
+
+        <div class="form-grup">
+          <label>Ad Soyad</label>
+          <input type="text" id="kayitIsim" placeholder="Adınız Soyadınız" />
+        </div>
+
+        <div class="form-grup">
+          <label>E-posta</label>
+          <input type="email" id="kayitEmail" placeholder="ornek@mail.com" />
+        </div>
+
+        <div class="form-grup">
+          <label>Şifre</label>
+          <div class="sifre-kutu">
+            <input type="password" id="kayitSifre" placeholder="En az 6 karakter" />
+            <button class="goz-btn" onclick="sifreyiGoster('kayitSifre', this)">👁</button>
+          </div>
+        </div>
+
+        <div class="form-grup">
+          <label>Şifre Tekrar</label>
+          <div class="sifre-kutu">
+            <input type="password" id="kayitSifre2" placeholder="Şifrenizi tekrar girin" />
+            <button class="goz-btn" onclick="sifreyiGoster('kayitSifre2', this)">👁</button>
+          </div>
+        </div>
+
+        <button class="modal-btn" onclick="kayitOl()">Kayıt Ol</button>
+        <p class="alt-link">Zaten hesabın var mı? <a onclick="modalGecis('kayitModal', 'girisModal')">Giriş Yap</a></p>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+        ADMİN GİRİŞ MODALI
+    ==================================================== -->
+    <div class="modal" id="adminGirisModal">
+      <div class="modal-icerik">
+        <button class="kapat-btn" onclick="modalKapat('adminGirisModal')">✕</button>
+        <h2>🔐 Admin Girişi</h2>
+       
+
+        <div class="form-grup">
+          <label>Kullanıcı Adı</label>
+          <input type="text" id="adminKullanici" placeholder="admin" />
+        </div>
+
+        <div class="form-grup">
+          <label>Şifre</label>
+          <input type="password" id="adminSifre" placeholder="****" />
+        </div>
+
+        <button class="modal-btn" onclick="adminGiris()">Giriş Yap</button>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+        ADMİN PANELİ MODALI
+    ==================================================== -->
+    <div class="modal genis-modal" id="adminPanelModal">
+      <div class="modal-icerik">
+        <button class="kapat-btn" onclick="modalKapat('adminPanelModal')">✕</button>
+        <h2>🛠️ Admin Paneli</h2>
+
+        <!-- İstatistik kartları -->
+        <div class="admin-istatlar">
+          <div class="admin-istat-kart">
+            <h3 id="toplamTeklif">3</h3>
+            <p>Toplam Teklif</p>
+          </div>
+          <div class="admin-istat-kart">
+            <h3>47</h3>
+            <p>Aktif Kurye</p>
+          </div>
+          <div class="admin-istat-kart">
+            <h3>1.2K</h3>
+            <p>Teslim Edilen</p>
+          </div>
+        </div>
+
+        <!-- Tab butonları -->
+        <div class="tab-butonlar">
+          <button class="tab-btn aktif" onclick="tabGoster('teklifler', this)">📋 Teklifler</button>
+          <button class="tab-btn" onclick="tabGoster('kuryeler', this)">🚴 Kuryeler</button>
+          <button class="tab-btn" onclick="tabGoster('ayarlar', this)">⚙️ Ayarlar</button>
+        </div>
+
+        <!-- Teklifler Tab -->
+        <div class="tab-icerik" id="tab-teklifler">
+          <button class="demo-btn" onclick="demoTeklifEkle()">+ Demo Teklif Ekle</button>
+          <table>
+            <thead>
+              <tr>
+                <th>Müşteri</th>
+                <th>Güzergah</th>
+                <th>Ağırlık</th>
+                <th>Durum</th>
+              </tr>
+            </thead>
+            <tbody id="teklifTablosu">
+              <tr>
+                <td>Ali Yılmaz</td>
+                <td>Kadıköy → Beşiktaş</td>
+                <td>2 kg</td>
+                <td><span class="badge bekliyor">Bekliyor</span></td>
+              </tr>
+              <tr>
+                <td>Fatma Demir</td>
+                <td>Üsküdar → Şişli</td>
+                <td>5 kg</td>
+                <td><span class="badge yolda">Yolda</span></td>
+              </tr>
+              <tr>
+                <td>Can Kaya</td>
+                <td>Bağcılar → Ataşehir</td>
+                <td>1 kg</td>
+                <td><span class="badge teslim">Teslim Edildi</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      <div class="tab-icerik gizli" id="tab-kuryeler">
+    <div style="display:flex;gap:10px;margin-bottom:15px;align-items:center">
+      <input type="text" id="yeniKuryeAd" placeholder="Ad Soyad" style="flex:1;padding:8px 12px;background:#111;border:2px solid #333;border-radius:6px;color:#fff" />
+      <input type="text" id="yeniKuryeBolge" placeholder="Bölge" style="flex:1;padding:8px 12px;background:#111;border:2px solid #333;border-radius:6px;color:#fff" />
+      <select id="yeniKuryeDurum" style="padding:8px 12px;background:#111;border:2px solid #333;border-radius:6px;color:#fff">
+        <option>Aktif</option>
+        <option>Müsait</option>
+        <option>Pasif</option>
+      </select>
+      <button class="demo-btn" style="white-space:nowrap" onclick="kuryeEkle()">+ Ekle</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Kurye Adı</th>
+          <th>Bölge</th>
+          <th>Durum</th>
+          <th>İşlem</th>
+        </tr>
+      </thead>
+      <tbody id="kuryeTablosu">
+        <tr><td colspan="4" style="text-align:center;color:#555">Yükleniyor...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+        <!-- Ayarlar Tab -->
+        <div class="tab-icerik gizli" id="tab-ayarlar">
+          <div class="ayar-satir">
+            <span>📢 Bildirimler</span>
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="ayar-satir">
+            <span>🌙 Gece Modu</span>
+            <label class="toggle">
+              <input type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="ayar-satir">
+            <span>📦 Otomatik Atama</span>
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+        NAVBAR
+    ==================================================== -->
+    <nav id="navbar">
+      <div class="logo">Kurye<span>Mix</span></div>
+
+      <ul class="menu">
+        <li><a href="#hizmetler">Hizmetler</a></li>
+        <li><a href="#takip">Takip Et</a></li>
+        <li><a href="#fiyatlar">Fiyatlar</a></li>
+        <li><a href="#iletisim">İletişim</a></li>
+      </ul>
+
+      <div class="nav-butonlar">
+    <div id="navAuthArea">
+      <button class="nav-btn giris-btn" onclick="modalAc('girisModal')">Giriş Yap</button>
+      <button class="nav-btn kayit-btn" onclick="modalAc('kayitModal')">Kayıt Ol</button>
+    </div>
+    <div id="navUserArea" class="nav-user-area gizli">
+      <div class="kullanici-avatar" id="navAvatar">A</div>
+      <span class="kullanici-email" id="navEmail">kullanici@mail.com</span>
+      <button class="nav-btn cikis-btn" onclick="cikisYap()">Çıkış</button>
+    </div>
+
+  <div class="sepet-btn-kap" id="sepetBtnKap">
+    <button class="nav-btn sepet-btn" onclick="sepetAc()">
+      🛒 Sepet
+      <span class="sepet-sayi" id="sepetSayi">0</span>
+    </button>
+  </div>
+    <button class="nav-btn admin-btn" onclick="modalAc('adminGirisModal')">🔐 Admin</button>
+  </div>
+    </nav>
+
+
+    <!-- ====================================================
+        HERO
+    ==================================================== -->
+    <section class="hero">
+      <div class="hero-icerik">
+        <h1>Paketiniz <span>Güvende</span> 🚀</h1>
+        <p>KuryeMix ile paketleriniz aynı gün, güvenli ve hızlı şekilde teslim edilir.</p>
+        <div class="hero-butonlar">
+          <button onclick="document.getElementById('takip').scrollIntoView({behavior:'smooth'})">📍 Paketi Takip Et</button>
+          <button class="ikincil-btn" onclick="document.getElementById('iletisim').scrollIntoView({behavior:'smooth'})">📞 Bize Ulaş</button>
+        </div>
+      </div>
+      <div class="hero-sag">
+        <div class="kargo-kutu">
+          <p>📦</p>
+          <p>Ekspres Teslimat</p>
+          <p>Aynı Gün</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====================================================
+        SAYAÇLAR (animasyonlu)
+    ==================================================== -->
+    <section class="sayaclar">
+      <div class="sayac-kart">
+        <h3 class="sayac" data-hedef="2785">0</h3>
+        <p>Mutlu Müşteri</p>
+      </div>
+      <div class="sayac-kart">
+        <h3 class="sayac" data-hedef="9756">0</h3>
+        <p>Teslim Edilen Paket</p>
+      </div>
+      <div class="sayac-kart">
+        <h3 class="sayac" data-hedef="142">0</h3>
+        <p>Aktif Kurye</p>
+      </div>
+      <div class="sayac-kart">
+        <h3 class="sayac" data-hedef="98">0</h3>
+        <p>% Memnuniyet</p>
+      </div>
+    </section>
+
+
+    <!-- ====================================================
+        HİZMETLER
+    ==================================================== -->
+    <section class="hizmetler" id="hizmetler">
+      <h2>Hizmetlerimiz</h2>
+      <p class="bolum-aciklama">Her ihtiyacınıza uygun kurye çözümleri sunuyoruz.</p>
+
+      <div class="kartlar">
+        <div class="kart animasyon-kart">
+          <div class="kart-ikon">⚡</div>
+          <h3>Ekspres Teslimat</h3>
+          <p>Aynı gün içinde, belirlenen saatte kapınıza teslim ediyoruz.</p>
+          <span class="kart-etiket">En Popüler</span>
+        </div>
+
+        <div class="kart animasyon-kart">
+          <div class="kart-ikon">🏢</div>
+          <h3>Kurumsal Kurye</h3>
+          <p>Şirketlere özel anlaşmalı kurye hizmeti ve fatura seçeneği.</p>
+        </div>
+
+        <div class="kart animasyon-kart">
+          <div class="kart-ikon">🛡️</div>
+          <h3>Sigortalı Kargo</h3>
+          <p>Değerli eşyalarınız tam sigorta güvencesiyle taşınır.</p>
+        </div>
+
+        <div class="kart animasyon-kart">
+          <div class="kart-ikon">🌙</div>
+          <h3>Gece Teslimatı</h3>
+          <p>22:00 - 06:00 saatleri arasında kesintisiz hizmet.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ====================================================
+        TAKİP
+    ==================================================== -->
+    <section class="takip" id="takip">
+      <h2>📍 Paketini Takip Et</h2>
+      <p>Takip numaranı girerek paketinin anlık konumunu öğren.</p>
+
+      <div class="takip-form">
+        <input type="text" id="takipNo" placeholder="Örn: KM-12345 veya KM-99999" />
+        <button onclick="takipEt()">Sorgula →</button>
+      </div>
+
+      <div id="takipSonuc"></div>
+    </section>
+
+
+    <!-- ====================================================
+        FİYATLAR
+    ==================================================== -->
+    <section class="fiyatlar" id="fiyatlar">
+      <h2>Fiyatlarımız</h2>
+      <p class="bolum-aciklama">Şeffaf ve uygun fiyatlarla hizmetinizdeyiz.</p>
+
+      <div class="fiyat-kartlar">
+
+        <div class="fiyat-kart">
+          <h3>Standart</h3>
+          <div class="fiyat">₺49<span>/paket</span></div>
+          <ul>
+            <li>✅ Ertesi gün teslimat</li>
+            <li>✅ SMS bildirim</li>
+            <li>✅ Online takip</li>
+            <li>❌ Sigorta</li>
+            <li>❌ Öncelikli destek</li>
+          </ul>
+        <button onclick="paketDetayAc('standart')">Seç</button>
+        </div>
+
+        <div class="fiyat-kart populer">
+          <div class="populer-etiket">⭐ Popüler</div>
+          <h3>Ekspres</h3>
+          <div class="fiyat">₺89<span>/paket</span></div>
+          <ul>
+            <li>✅ Aynı gün teslimat</li>
+            <li>✅ SMS & E-posta bildirim</li>
+            <li>✅ Online takip</li>
+            <li>✅ Temel sigorta</li>
+            <li>❌ Öncelikli destek</li>
+          </ul>
+          <button onclick="paketDetayAc('ekspres')">Seç</button>
+        </div>
+
+        <div class="fiyat-kart">
+          <h3>Premium</h3>
+          <div class="fiyat">₺149<span>/paket</span></div>
+          <ul>
+            <li>✅ 2 saat içinde teslimat</li>
+            <li>✅ Tüm bildirimler</li>
+            <li>✅ Canlı harita takip</li>
+            <li>✅ Tam kapsamlı sigorta</li>
+            <li>✅ 7/24 öncelikli destek</li>
+          </ul>
+          <button onclick="paketDetayAc('premium')">Seç</button>
+        </div>
+
+      </div>
+    </section>
+
+    <div style="
+    margin:15px 0;
+    padding:12px;
+    border-left:4px solid #FFD700;
+    background:#1a1a1a;
+    border-radius:6px;
+    font-size:13px;
+    color:#ccc;
+  ">
+  </div>
+
+
+    <!-- ====================================================
+        İLETİŞİM
+    ==================================================== -->
+    <section class="iletisim" id="iletisim">
+      <h2>Bize Ulaş</h2>
+
+      <div class="iletisim-icerik">
+
+        <!-- İletişim bilgileri -->
+        <div class="iletisim-bilgiler">
+          <div class="bilgi-satir">
+            <span class="bilgi-ikon">📞</span>
+            <div>
+              <strong>Telefon</strong>
+              <p>0850 123 45 67</p>
+            </div>
+          </div>
+          <div class="bilgi-satir">
+            <span class="bilgi-ikon">📧</span>
+            <div>
+              <strong>E-posta</strong>
+              <p>info@kuryemix.com</p>
+            </div>
+          </div>
+          <div class="bilgi-satir">
+            <span class="bilgi-ikon">📍</span>
+            <div>
+              <strong>Adres</strong>
+              <p>Atatürk Cad. No:12, İstanbul</p>
+            </div>
+          </div>
+          <div class="bilgi-satir">
+            <span class="bilgi-ikon">🕐</span>
+            <div>
+              <strong>Çalışma Saatleri</strong>
+              <p>7/24 Aktif Hizmet</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- İletişim formu -->
+        <div class="iletisim-formu">
+          <div class="form-grup">
+            <label>Ad Soyad</label>
+            <input type="text" id="iletisimIsim" placeholder="Adınız Soyadınız" />
+          </div>
+          <div class="form-grup">
+            <label>E-posta</label>
+            <input type="email" id="iletisimEmail" placeholder="ornek@mail.com" />
+          </div>
+          <div class="form-grup">
+            <label>Konu</label>
+            <select id="iletisimKonu">
+              <option value="">Konu seçin...</option>
+              <option>Teslimat Sorunu</option>
+              <option>Fiyat Bilgisi</option>
+              <option>Kurumsal Teklif</option>
+              <option>Diğer</option>
+            </select>
+          </div>
+          <div class="form-grup">
+            <label>Mesaj</label>
+            <textarea id="iletisimMesaj" placeholder="Mesajınızı yazın..."></textarea>
+          </div>
+          <button onclick="mesajGonder()">Gönder →</button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ====================================================
+        FOOTER
+    ==================================================== -->
+    <footer>
+      <div class="footer-icerik">
+        <div class="footer-logo">Kurye<span>Mix</span></div>
+        <p>Hızlı, güvenli ve zamanında teslimat.</p>
+      </div>
+      <div class="footer-alt">
+        <p>© 2024 <span>KuryeMix</span> — Tüm hakları saklıdır.</p>
+      </div>
+    </footer>
+
+    <!-- PAKET DETAY MODALI -->
+  <div class="modal genis-modal" id="paketDetayModal">
+    <div class="modal-icerik paket-detay-icerik">
+      <button class="kapat-btn" onclick="modalKapat('paketDetayModal')">✕</button>
+      <div id="paketDetayIcerik"></div>
+    </div>
+  </div>
+
+
+    <script src="app.js"></script>
+  </body>
+  </html>

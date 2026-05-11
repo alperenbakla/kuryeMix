@@ -1,0 +1,20 @@
+# Bağımlılıklar — npm install ile yeniden oluşturulur
+node_modules/
+
+# Ortam değişkenleri — ASLA GitHub'a yükleme!
+.env
+.env.local
+.env.production
+
+# Log dosyaları
+*.log
+npm-debug.log*
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE dosyaları
+.vscode/
+.idea/
